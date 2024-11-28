@@ -1,0 +1,260 @@
+***** Assignment-2 ****
+
+SELECT * FROM p WHERE p_city="london";
+
+SELECT pno,pname from p where weight =(select max(weight) from p);
+
+SELECT pname,pno FROM p WHERE color="red";
+
+select s.sname,s.s_city from s,sp WHERE s.sno=sp.sno and sp.qty>200;
+
+select * from p where weight=(select max(weight) from p where weight<(select max(weight) from p));
+
+
+***** Assignment - 3 *****
+
+6. SELECT s.sno,sp.qty,p.weight from sp,p ,s WHERE sp.sno=s.sno AND sp.pno=p.pno AND p.weight=(SELECT MAX(weight) FROM p);
+
+
+7. SELECT s.sname,sp.qty,p.color from sp,p ,s WHERE sp.sno=s.sno AND sp.pno=p.pno AND p.color="red";
+
+8. select DISTINCT s.sname,p.p_city,sp.qty from s,sp,p where s.sno=sp.sno and p.pno=sp.pno and s.s_status < 30;
+
+9. select s.sno,s.sname,sum(qty) from sp,s where s.sno=sp.sno and s.sno<'s4' group by sname;
+
+10. SELECT p.pno,p.pname,sum(qty) as "QTY" from p,sp where sp.pno=p.pno group by pname;
+
+
+
+***** Assignment - 4 *****
+
+
+
+11. SELECT p.pno,p.pname,sum(qty) as "QTY" from p,sp where sp.pno=p.pno group by pname;
+
+12. select s.sno,s.sname,sp.qty from sp,s where s.sno=sp.sno and s.sno<'s4' group by sname;
+
+13. select DISTINCT s.sno,s.sname,sp.qty from s,sp where s.sno=sp.sno and s.s_status = 20 GROUP by s.sno;
+ 
+
+
+***** Assignment - 5 *****
+
+
+create table dept
+(
+    	dept_id int PRIMARY KEY,
+        dept_name varchar(20),
+    	dept_location varchar(20)
+    
+    );
+
+
+create table emp
+(
+	emp_id int primary key,
+	emp_name varchar2(35),
+	emp_dept_id int,
+	emp_boss_id int,
+	emp_salary bigint(30),
+ 	FOREIGN KEY (emp_dept_id) REFERENCES dept(dept_id)
+);
+
+
+
+insert into dept values(1,'Computer','Ahmedabad');
+insert into dept values(2,'Micro Biology','Sadra');
+insert into dept values(3,'Managment','Randheja');
+insert into dept values(4,'Main Office','Ahmedabad');
+
+
+insert into emp values(101,'Nikhil',1,401,200000);
+insert into emp values(102,'Satish',1,101,210000);
+insert into emp values(103,'Vrushali',1,101,175000);
+insert into emp values(201,'Archana',2,401,200000);
+insert into emp values(202,'Tanvi',2,201,135000);
+insert into emp values(203,'Dharti',2,201,175000);
+insert into emp values(301,'Hemali',3,401,235000);
+insert into emp values(302,'Vishal',3,301,180000);
+insert into emp values(303,'Gautam',3,301,199000);
+insert into emp values(401,'Registrar',4,401,500000);
+insert into emp values(402,'Bipin',4,401,490000);
+insert into emp values(403,'Narendra',4,402,1000000);
+insert into emp values(404,'Mohan',4,402,800000);	
+
+
+***** Assignment - 6*****
+
+1.
+
+SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
+FROM emp,emp as boss_emp,dept,dept as boss_dept
+where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id;
+
+2.
+
+SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
+FROM emp,emp as boss_emp,dept,dept as boss_dept
+where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id 
+and emp.salary > boss_emp.salary;
+
+
+
+***** Assignment - 7 *****
+1.
+SELECT dept.dept_name,max(emp_salary) as "salary" from dept,emp where dept.dept_id=emp.emp_dept_id GROUP by dept_name;
+
+2.
+SELECT dept.dept_name,count(emp_dept_id) as "Emp_dept" from dept,emp where dept.dept_id=emp.emp_dept_id GROUP by emp_dept_id;
+
+
+
+***** Assignment - 8 *****
+
+
+
+create table account
+(
+	acc_no int,
+	amount decimal(10,2)
+);
+
+
+
+
+***** Assignment - 9 *****
+
+
+
+create trigger ins_sum before insert on account for each row set @sum=@sum+NEW.amount
+
+
+set @sum=0;
+
+insert into account values(8,140.00),(7,-200.00),(9,500.00);
+
+select @sum AS 'Total amount inserted';
+
+
+***** Assignment - 10 *****
+
+-- create trigger that make sum of amount inserted in table to credit and debit according to amount + or -.
+	
+CREATE TRIGGER ins_transaction BEFORE INSERT on account 
+for EACH ROW precedes ins_sum
+    set 
+    @deposite =@deposite +IF(NEW.amount > 0 ,NEW.amount,0),
+    @withdraw= @withdraw + if(NEW.amount < 0, -New.amount,0);
+
+set @sum=0
+set @deposite=0
+set @withdraw=0
+
+insert into account values(1,10000.00),(2,2000.00),(3,-5000.00);
+select @deposite as "Deposite", @withdraw as "Withdraw", @sum as "Total";
+
+
+
+
+
+**** lock tabe ****
+
+go to shell 
+
+password : MySQL -u root
+
+ -p to reset password
+
+lock tables s read;
+unlock tables;
+
+lock tables s write; 
+
+
+
+
+**** practice *****
+
+select emp.emp_name,dept.dept_name,emp.emp_salary from emp,dept where emp.emp_dept_id=dept.dept_id and emp_boss_id != 401;
+
+select emp_id,emp_name,sum(emp_salary) from emp;
+
+select emp.emp_id,sum(emp_salary) as "Total salary",emp.emp_dept_id from emp,dept where emp.emp_dept_id=dept.dept_id GROUP by emp.emp_dept_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE account (
+    id INT PRIMARY KEY,
+    amount DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE account_summary (
+    account_id INT,
+    credit DECIMAL(10, 2) DEFAULT 0,
+    debit DECIMAL(10, 2) DEFAULT 0
+);
+
+
+
+
+DELIMITER //
+
+CREATE TRIGGER update_credit_debit
+AFTER INSERT ON account
+FOR EACH ROW
+BEGIN
+    -- Check if a record already exists for the account_id
+    IF EXISTS (SELECT 1 FROM account_summary WHERE account_id = NEW.id) THEN
+        -- Update the existing record
+        IF NEW.amount > 0 THEN
+            UPDATE account_summary
+            SET credit = credit + NEW.amount
+            WHERE account_id = NEW.id;
+        ELSE
+            UPDATE account_summary
+            SET debit = debit + ABS(NEW.amount)
+            WHERE account_id = NEW.id;
+        END IF;
+    ELSE
+        -- Insert a new record if it doesn't exist
+        INSERT INTO account_summary (account_id, credit, debit)
+        VALUES (NEW.id, 
+                IF(NEW.amount > 0, NEW.amount, 0), 
+                IF(NEW.amount < 0, ABS(NEW.amount), 0));
+    END IF;
+END;
+//
+
+DELIMITER ;
+
+
+
+INSERT INTO account (id, amount) VALUES (1, 200);  -- Adds 200 to credit for account_id = 1
+INSERT INTO account (id, amount) VALUES (2, -150); -- Adds 150 to debit for account_id = 2
+INSERT INTO account (id, amount) VALUES (1, 100);  -- Adds 100 to credit for account_id = 1
+
+
+
+SELECT * FROM account_summary;
+
+
