@@ -1,3 +1,35 @@
+
+***** Assignment-1 ****
+
+create table s
+(
+	sno char(3) primary key,
+	sname varchar(50),
+	s_status int,
+	s_city varchar(25)
+);
+
+
+create table p
+(
+	pno char(3) primary key,
+	pname varchar(50),
+	color varchar(10),
+	weight float(5.2),
+	p_city varchar(25)
+);
+
+create table sp
+(
+	sno char(3),
+	pno char(3),
+	qty int,
+	primary key(sno,pno),
+	foreign key(sno) references s(sno),
+	foreign key(pno) references p(pno)
+	
+);
+
 ***** Assignment-2 ****
 
 SELECT * FROM p WHERE p_city="london";
