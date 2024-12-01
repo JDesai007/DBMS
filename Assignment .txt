@@ -22,7 +22,7 @@ select * from p where weight=(select max(weight) from p where weight<(select max
 
 9. select s.sno,s.sname,sum(qty) from sp,s where s.sno=sp.sno group by s.sno order by s.sno;
 
-10. SELECT p.pno,p.pname,sum(qty) as "QTY" from p,sp where sp.pno=p.pno group by pname;
+10. SELECT p.pno,p.pname,sum(qty) as "QTY" from p,sp where sp.pno=p.pno group by p.pno;
 
 
 
