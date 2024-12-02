@@ -128,7 +128,7 @@ where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_
 SELECT emp.emp_name as "Emp name",dept.dept_name as "Dept name",boss_emp.emp_name as "Boss emp name" ,boss_dept.dept_name as "Boss dept name" 
 FROM emp,emp as boss_emp,dept,dept as boss_dept
 where boss_emp.emp_id=emp.emp_boss_id and dept.dept_id=emp.emp_dept_id and boss_emp.emp_dept_id=boss_dept.dept_id 
-and emp.salary > boss_emp.salary;
+and emp.emp_salary > boss_emp.emp_salary;
 
 
 
@@ -178,9 +178,9 @@ for EACH ROW precedes ins_sum
     @deposite =@deposite +IF(NEW.amount > 0 ,NEW.amount,0),
     @withdraw= @withdraw + if(NEW.amount < 0, -New.amount,0);
 
-set @sum=0
-set @deposite=0
-set @withdraw=0
+set @sum=0;
+set @deposite=0;
+set @withdraw=0;
 
 insert into account values(1,10000.00),(2,2000.00),(3,-5000.00);
 select @deposite as "Deposite", @withdraw as "Withdraw", @sum as "Total";
